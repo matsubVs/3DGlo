@@ -71,51 +71,57 @@ window.addEventListener("DOMContentLoaded", () => {
         intervalId = setInterval(updateTime, 1000);
     }
 
-    countTimer('17 december 2020');
+    countTimer('18 december 2020');
 
     // Menu
     const toggleMenu = () => {
 
-        const btnMenu = document.querySelector('.menu'),
-            menu = document.querySelector('menu'),
+        const menu = document.querySelector('menu'),
             closeBtn = document.querySelector('.close-btn'),
-            menuItem = menu.querySelectorAll('ul>li'),
             menuItemLink = menu.querySelectorAll('ul>li>a'),
             mainSlideAnchorBtn = document.querySelector('main>a'),
+            mainSlideImg = document.querySelector('main>a>img'),
+            body = document.querySelector('body'),
 
             menuHandler = () => {
                 menu.classList.toggle('active-menu');
             };
 
-        btnMenu.addEventListener('click', menuHandler);
-
-        closeBtn.addEventListener('click', menuHandler);
-
-        menuItem.forEach(item => item.addEventListener('click', menuHandler));
-
-        menuItemLink.forEach(item => item.addEventListener('click', (event) => {
-            event.preventDefault()
+        body.addEventListener('click', event => {
+            let target = event.target;
+            console.log(target);
+            if (target.closest(".menu")) {
+                menuHandler();
+            } else if (target === closeBtn) {
+                menuHandler();
+            } else if (target === menu) {
+                menuHandler();
+            } else if (target === mainSlideImg) {
+                event.preventDefault()
+                const anchor = document.querySelector(mainSlideAnchorBtn.getAttribute('href'));
+                console.log(anchor);
+                anchor.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                })
+            } else {
+                menuItemLink.forEach(item => {
+                    if (target === item) {
+                        menuHandler();
+                        event.preventDefault()
             
-            const blockID = item.getAttribute('href')
-            
-            console.log(blockID);
-            document.querySelector(blockID).scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            })
-          })
-        );
-
-        mainSlideAnchorBtn.addEventListener('click', (event) => {
-            event.preventDefault()
-            const anchor = document.querySelector(mainSlideAnchorBtn.getAttribute('href'));
-            console.log(anchor);
-            anchor.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest'
-            })
-        })
-    };
+                        const blockID = item.getAttribute('href')
+                        
+                        console.log(blockID);
+                        document.querySelector(blockID).scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        })
+                    }
+                });
+            }
+        });
+    }
 
     toggleMenu();
 
@@ -123,14 +129,30 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const togglePopup = () => {
         const popup = document.querySelector('.popup'),
-            popupBtn = document.querySelectorAll('.popup-btn'),
-            popupClose = document.querySelector('.popup-close');
+            popupBtn = document.querySelectorAll('.popup-btn');
+
+        const animateClosePopup = () => {
+            if (screen.width > 768) {
+                animate({
+                    duration: 150,
+                    timing(timeFraction) {
+                        return timeFraction;
+                    },
+                    draw(progress) {
+                        popup.style.opacity = 1 - progress;
+                    }
+                });
+                setTimeout(() => popup.style.display = "none", 600);
+            } else {
+                popup.style.display = "none";
+            }
+        };
 
         popupBtn.forEach(item => item.addEventListener('click', () => {
             if (screen.width > 768) {
                 popup.style.display = "block";
                 animate({
-                    duration: 500,
+                    duration: 150,
                     timing(timeFraction) {
                         return timeFraction;
                     },
@@ -143,20 +165,17 @@ window.addEventListener("DOMContentLoaded", () => {
             }    
         }));
 
-        popupClose.addEventListener('click', () => {
-            if (screen.width > 768) {
-                animate({
-                    duration: 500,
-                    timing(timeFraction) {
-                        return timeFraction;
-                    },
-                    draw(progress) {
-                        popup.style.opacity = 1 - progress;
-                    }
-                });
-                setTimeout(() => popup.style.display = "none", 600);
+        popup.addEventListener('click', event => {
+            let target = event.target;
+
+            if (target.classList.contains('popup-close')) {
+                animateClosePopup();
             } else {
-                popup.style.display = "none";
+                target = target.closest('.popup-content');
+
+                if (!target) {
+                    animateClosePopup();
+                }
             }
         });
     };
