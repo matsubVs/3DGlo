@@ -304,14 +304,14 @@ window.addEventListener("DOMContentLoaded", () => {
         });
 
         slider.addEventListener('mouseover', event => {
-            if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+            if (event.target.matches('.portfolio-btn, .dot')) {
                 stopSlide();
             }
         });
 
         
         slider.addEventListener('mouseout', event => {
-            if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+            if (event.target.matches('.portfolio-btn, .dot')) {
                 startSlide();
             }
         });
