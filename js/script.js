@@ -105,19 +105,18 @@ window.addEventListener("DOMContentLoaded", () => {
             menuHandler = () => {
                 menu.classList.toggle('active-menu');
             };
-
+	
         body.addEventListener('click', event => {
             let target = event.target;
             if (target.closest(".menu")) {
                 menuHandler();
-            } else if (target === closeBtn) {
+            }  else if (menu.matches('.active-menu') && !target.matches('menu') && !target.matches('a')) {
                 menuHandler();
-            } else if (target === menu) {
+            } else if (target === closeBtn) {
                 menuHandler();
             } else if (target === mainSlideImg) {
                 event.preventDefault()
                 const anchor = document.querySelector(mainSlideAnchorBtn.getAttribute('href'));
-                console.log(anchor);
                 anchor.scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest'
@@ -129,8 +128,6 @@ window.addEventListener("DOMContentLoaded", () => {
                         event.preventDefault()
             
                         const blockID = item.getAttribute('href')
-                        
-                        console.log(blockID);
                         document.querySelector(blockID).scrollIntoView({
                             behavior: 'smooth',
                             block: 'start'
@@ -197,6 +194,41 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         });
     };
+
+      // tabs 
+      const tabs = () => {
+        const tabHeader = document.querySelector(".service-header"),
+            tab = tabHeader.querySelectorAll('.service-header-tab'),
+            tabContent = document.querySelectorAll('.service-tab');
+
+        const toggleTabContent = index => {
+            for (let i = 0; i < tabContent.length; i++) {
+                if (index === i) {
+                    tab[i].classList.add('active');
+                    tabContent[i].classList.remove("d-none");
+                } else {
+                    tab[i].classList.remove('active');
+                    tabContent[i].classList.add("d-none");
+                }
+            }
+        };
+        
+        tabHeader.addEventListener('click', event => {
+            let target = event.target;
+            target = target.closest(".service-header-tab");
+
+            if (target) {
+                tab.forEach((item, index) => {
+                    if (item === target) {
+                        toggleTabContent(index);
+                    }
+                });
+            }
+        
+        });
+    };
+
+    tabs();
 
     togglePopup();
 
