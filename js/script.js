@@ -391,6 +391,13 @@ window.addEventListener("DOMContentLoaded", () => {
                 dayValue = 1;
             const typeValue = calcType.options[calcType.selectedIndex].value,
                 squreValue = +calcSquare.value;
+
+            if (typeValue == '') {
+                calcSquare.value = '';
+                calcCount.value = '';
+                calcDay.value = '';
+                return;
+            } 
             
             if (calcCount.value > 1) {
                 countValue += (calcCount.value - 1) / 10;
@@ -405,6 +412,7 @@ window.addEventListener("DOMContentLoaded", () => {
             if (typeValue && squreValue) {
                 total = price * typeValue * squreValue * countValue * dayValue;
             }
+
             animate({
                 duration: 1000,
                 timing(timeFraction) {
