@@ -17,14 +17,17 @@ function animate({ timing, draw, duration }) {
     });
 }
 
+const get = selector => document.querySelector(selector);
+const getAll = selector => document.querySelectorAll(selector);
+
 window.addEventListener("DOMContentLoaded", () => {
     "use sctric";
 
     //Timer
     function countTimer(deadline) {
-        const timerHours = document.querySelector('#timer-hours'),
-            timerMinutes = document.querySelector('#timer-minutes'),
-            timerSeconds = document.querySelector('#timer-seconds');
+        const timerHours = get('#timer-hours'),
+            timerMinutes = get('#timer-minutes'),
+            timerSeconds = get('#timer-seconds');
 
         function getTimeRemaining() {
             const dateStop = new Date(deadline).getTime(),
@@ -71,12 +74,11 @@ window.addEventListener("DOMContentLoaded", () => {
         intervalId = setInterval(updateTime, 1000);
     }
 
-    countTimer('18 december 2020');
+    countTimer('24 december 2020');
 
     // Create Dots
-    const dotParent = document.querySelector('.portfolio-dots'),
-        slideCount = document.querySelectorAll('.portfolio-item').length;
-
+    const dotParent = get('.portfolio-dots'),
+        slideCount = getAll('.portfolio-item').length;
 
     const createDots = (count, parent) => {
         for (let i = 0; i < count; i++) {
@@ -95,12 +97,12 @@ window.addEventListener("DOMContentLoaded", () => {
     // Menu
     const toggleMenu = () => {
 
-        const menu = document.querySelector('menu'),
-            closeBtn = document.querySelector('.close-btn'),
-            menuItemLink = menu.querySelectorAll('ul>li>a'),
-            mainSlideAnchorBtn = document.querySelector('main>a'),
-            mainSlideImg = document.querySelector('main>a>img'),
-            body = document.querySelector('body'),
+        const menu = get('menu'),
+            closeBtn = get('.close-btn'),
+            menuItemLink = getAll('ul>li>a'),
+            mainSlideAnchorBtn = get('main>a'),
+            mainSlideImg = get('main>a>img'),
+            body = get('body'),
 
             menuHandler = () => {
                 menu.classList.toggle('active-menu');
@@ -116,7 +118,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 menuHandler();
             } else if (target === mainSlideImg) {
                 event.preventDefault()
-                const anchor = document.querySelector(mainSlideAnchorBtn.getAttribute('href'));
+                const anchor = get(mainSlideAnchorBtn.getAttribute('href'));
                 anchor.scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest'
@@ -128,7 +130,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         event.preventDefault()
             
                         const blockID = item.getAttribute('href')
-                        document.querySelector(blockID).scrollIntoView({
+                        get(blockID).scrollIntoView({
                             behavior: 'smooth',
                             block: 'start'
                         })
@@ -141,10 +143,9 @@ window.addEventListener("DOMContentLoaded", () => {
     toggleMenu();
 
     //Popup
-
     const togglePopup = () => {
-        const popup = document.querySelector('.popup'),
-            popupBtn = document.querySelectorAll('.popup-btn');
+        const popup = get('.popup'),
+            popupBtn = getAll('.popup-btn');
 
         const animateClosePopup = () => {
             if (screen.width > 768) {
@@ -197,9 +198,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
       // tabs 
       const tabs = () => {
-        const tabHeader = document.querySelector(".service-header"),
+        const tabHeader = get(".service-header"),
             tab = tabHeader.querySelectorAll('.service-header-tab'),
-            tabContent = document.querySelectorAll('.service-tab');
+            tabContent = getAll('.service-tab');
 
         const toggleTabContent = index => {
             for (let i = 0; i < tabContent.length; i++) {
@@ -234,9 +235,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     //slider
     const slider = () => {
-        const slide = document.querySelectorAll('.portfolio-item'),
-            dot = document.querySelectorAll('.dot'),
-            slider = document.querySelector('.portfolio-content');
+        const slide = getAll('.portfolio-item'),
+            dot = getAll('.dot'),
+            slider = get('.portfolio-content');
 
         let currentSlide = 0,
             interval;
@@ -320,5 +321,109 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     slider();
+
+    // change photo
+    const changePhoto = () => {
+        const commandBlock = get('.command'),
+            commandImgs = commandBlock.querySelectorAll('img[data-img]'),
+            changeDataset = target => {
+                if (!target.dataset.tmp) {
+                    target.dataset.tmp = target.src;
+                    target.src = target.dataset.img;
+                    target.dataset.img = target.dataset.tmp;
+                } else {
+                    target.dataset.img = target.src;
+                    target.src = target.dataset.tmp;
+                    target.dataset.tmp = '';
+                }
+                
+            };
+
+        commandBlock.addEventListener('mouseover', event => {
+            const target = event.target;
+            commandImgs.forEach(item => {
+                if (item === target) {
+                    changeDataset(target);
+                }
+            });
+        });
+
+        commandBlock.addEventListener('mouseout', event => {
+            const target = event.target;
+            commandImgs.forEach(item => {
+                if (item === target) {
+                    changeDataset(target);
+                }
+            });
+        });
+    };
+
+    changePhoto();
+
+    // validation
+    const inputValidation = () => {
+        const inputBlock = get('.calc-block');
+        inputBlock.addEventListener('click', event => {
+            const target = event.target;
+            if (target.matches('.calc-item') && !target.matches('.calc-type')) {
+                target.addEventListener('input', event => {
+                    const target = event.target;
+                    target.value = target.value.replace(/[^\d]/, '');
+                });
+            }
+        });
+    };
+
+    inputValidation();
+    
+    //calculator
+    const calc = (price = 100) => {
+        const calcBlock = get('.calc-block'),
+            calcType = get('.calc-type'),
+            calcSquare = get('.calc-square'),
+            calcDay = get('.calc-day'),
+            calcCount = get('.calc-count'),
+            totalValue = get('#total');
+        
+        const countSum = () => {
+            let total = 0,
+                countValue = 1,
+                dayValue = 1;
+            const typeValue = calcType.options[calcType.selectedIndex].value,
+                squreValue = +calcSquare.value;
+            
+            if (calcCount.value > 1) {
+                countValue += (calcCount.value - 1) / 10;
+            }
+
+            if (calcDay.value && calcDay.value < 5) {
+                dayValue *= 2;
+            } else if (calcDay.value && calcDay.value < 10) {
+                dayValue *= 1.5;
+            }
+
+            if (typeValue && squreValue) {
+                total = price * typeValue * squreValue * countValue * dayValue;
+            }
+            animate({
+                duration: 1000,
+                timing(timeFraction) {
+                    return timeFraction;
+                },
+                draw(progress) {
+                    totalValue.textContent = Math.ceil(progress * total);
+                }
+            });
+        };
+
+        calcBlock.addEventListener('change', event => {
+            const target = event.target;
+            if (target.matches('.calc-type, .calc-square, .calc-day, .calc-count')) {
+                countSum();
+            }
+        });
+    };
+
+    calc();
     
 });
