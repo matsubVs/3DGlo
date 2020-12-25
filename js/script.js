@@ -109,7 +109,7 @@ window.addEventListener("DOMContentLoaded", () => {
             };
 	
         body.addEventListener('click', event => {
-            let target = event.target;
+            const target = event.target;
             if (target.closest(".menu")) {
                 menuHandler();
             }  else if (menu.matches('.active-menu') && !target.matches('menu') && !target.matches('a')) {
@@ -117,28 +117,28 @@ window.addEventListener("DOMContentLoaded", () => {
             } else if (target === closeBtn) {
                 menuHandler();
             } else if (target === mainSlideImg) {
-                event.preventDefault()
+                event.preventDefault();
                 const anchor = get(mainSlideAnchorBtn.getAttribute('href'));
                 anchor.scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest'
-                })
+                });
             } else {
                 menuItemLink.forEach(item => {
                     if (target === item) {
                         menuHandler();
-                        event.preventDefault()
+                        event.preventDefault();
             
-                        const blockID = item.getAttribute('href')
+                        const blockID = item.getAttribute('href');
                         get(blockID).scrollIntoView({
                             behavior: 'smooth',
                             block: 'start'
-                        })
+                        });
                     }
                 });
             }
         });
-    }
+    };
 
     toggleMenu();
 
@@ -196,8 +196,8 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-      // tabs 
-      const tabs = () => {
+    // tabs 
+    const tabs = () => {
         const tabHeader = get(".service-header"),
             tab = tabHeader.querySelectorAll('.service-header-tab'),
             tabContent = getAll('.service-tab');
@@ -362,6 +362,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // validation
     const inputValidation = () => {
+        const tel = getAll('input[type="tel"]');
+        tel.forEach(item => {
+            item.addEventListener('input', () => {
+                item.value = item.value.replace(/[^\d+]/, '');
+            });
+        });
         const inputBlock = get('.calc-block');
         inputBlock.addEventListener('click', event => {
             const target = event.target;
@@ -392,7 +398,7 @@ window.addEventListener("DOMContentLoaded", () => {
             const typeValue = calcType.options[calcType.selectedIndex].value,
                 squreValue = +calcSquare.value;
 
-            if (typeValue == '') {
+            if (typeValue === '') {
                 calcSquare.value = '';
                 calcCount.value = '';
                 calcDay.value = '';
@@ -433,5 +439,66 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     calc();
-    
+
+    //send-ajax-form
+    const sendForm = () => {
+        const errorMessage = 'Что-то пошло не так',
+            loadMessage = 'Загрузка...',
+            successMessage = 'Спасибо! Мы скоро с вами свяжемся';
+
+        const forms = getAll('form');
+        const statusMessage = document.createElement('div');
+
+        const clearForm = () => {
+            forms.forEach(item => [...item.elements].forEach(item => item.value = ''));
+        };
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+
+                if (request.readyState !== 4) {
+                    return;
+                }
+
+                if (request.status === 200) {
+                    outputData();
+                } else {
+                    errorData(request.status);
+                }
+
+                clearForm();
+            });
+
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+
+            request.send(JSON.stringify(body));
+        };
+        
+        forms.forEach(form => {
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                form.appendChild(statusMessage);
+                statusMessage.textContent = loadMessage;
+
+                const formData = new FormData(form);
+                const body = {};
+                formData.forEach((value, key) => {
+                    body[key] = value;
+                });
+                postData(body, () => {
+                    statusMessage.textContent = successMessage;
+                }, 
+                error => {
+                    statusMessage.textContent = errorMessage;
+                    console.error(error);
+                });
+            });
+        });
+        
+    };
+
+    sendForm();
 });
+

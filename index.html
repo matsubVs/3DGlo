@@ -440,12 +440,13 @@
 	const valid1 = new Validator({
         selector: "#form2",
 		pattern: {
-			'cyrillic': /[а-яё]/gi,
+			'message': /[а-яё\ \,\.\:\;\d]/gi,
+			'cyrillic': /[а-яё\ ]/gi,
 		},
 		method: {
 			'form2-message': [
 				['notEmpty'],
-				['pattern', 'cyrillic']
+				['pattern', 'message']
 			],
 			'form2-name': [
 				['notEmpty'],
