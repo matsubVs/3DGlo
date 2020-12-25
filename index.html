@@ -412,5 +412,80 @@
 </div>
 
 <script src="js/script.js"></script>
+<script src="js/validator.js"></script>
+<script>
+    const valid = new Validator({
+        selector: "#form1",
+        pattern: {
+			'cyrillic': /[а-яё]/gi,
+		},
+        method: {
+			'form1-name': [
+				['notEmpty'],
+				['pattern', 'cyrillic']
+			],
+            'form1-phone': [
+                ['notEmpty'],
+                ['pattern', 'phone']
+            ],
+            'form1-email': [
+            ['notEmpty'],
+            ['pattern', 'email']
+            ]
+        }
+    })
+
+	valid.init();
+	
+	const valid1 = new Validator({
+        selector: "#form2",
+		pattern: {
+			'cyrillic': /[а-яё]/gi,
+		},
+		method: {
+			'form2-message': [
+				['notEmpty'],
+				['pattern', 'cyrillic']
+			],
+			'form2-name': [
+				['notEmpty'],
+				['pattern', 'cyrillic']
+			],
+            'form2-phone': [
+                ['notEmpty'],
+                ['pattern', 'phone']
+            ],
+            'form2-email': [
+            ['notEmpty'],
+            ['pattern', 'email']
+            ]
+        }
+    })
+
+	valid1.init();
+	
+	const valid2 = new Validator({
+        selector: "#form3",
+		pattern: {
+			'cyrillic': /[а-яё]/gi,
+		},
+		method: {
+			'form3-name': [
+				['notEmpty'],
+				['pattern', 'cyrillic']
+			],
+            'form3-phone': [
+                ['notEmpty'],
+                ['pattern', 'phone']
+            ],
+            'form3-email': [
+            ['notEmpty'],
+            ['pattern', 'email']
+            ]
+        }
+    })
+
+    valid2.init();
+</script>
 </body>
 </html>
