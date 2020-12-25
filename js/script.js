@@ -74,7 +74,7 @@ window.addEventListener("DOMContentLoaded", () => {
         intervalId = setInterval(updateTime, 1000);
     }
 
-    countTimer('24 december 2020');
+    countTimer('31 december 2020');
 
     // Create Dots
     const dotParent = get('.portfolio-dots'),
@@ -368,7 +368,19 @@ window.addEventListener("DOMContentLoaded", () => {
                 item.value = item.value.replace(/[^\d+]/, '');
             });
         });
+
+        const name = getAll('.form-name');
+        name.forEach(item => {
+            item.addEventListener('input', () => {
+                item.value = item.value.replace(/[^а-яё ]/, '');
+            });
+        });
+        const message = get('.mess');
+
+        message.addEventListener('input', event => 
+            event.target.value = event.target.value.replace(/[^а-яё ,;:.\d]/, ''));
         const inputBlock = get('.calc-block');
+
         inputBlock.addEventListener('click', event => {
             const target = event.target;
             if (target.matches('.calc-item') && !target.matches('.calc-type')) {
