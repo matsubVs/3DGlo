@@ -375,8 +375,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 item.value = item.value.replace(/[^а-яё ]/, '');
             });
         });
-        const message = get('.mess');
 
+        const message = get('.mess');
         message.addEventListener('input', event => 
             event.target.value = event.target.value.replace(/[^а-яё ,;:.\d]/, ''));
         const inputBlock = get('.calc-block');
@@ -452,14 +452,34 @@ window.addEventListener("DOMContentLoaded", () => {
 
     calc();
 
+    const checkFormElements = form => {
+        const filterForm = [...form.elements].filter(item => {
+            if (item.matches('[type="tel"]')) {
+                return /[\d+]{7,13}/.test(item.value);
+            } else if (item.matches('[type="email"]')) {
+                return /([a-z])|.+@.+\..+/i.test(item.value);
+            } else {
+                return item;
+            }
+        });
+
+        if (filterForm.length === [...form.elements].length) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     //send-ajax-form
     const sendForm = () => {
         const errorMessage = 'Что-то пошло не так',
             loadMessage = 'Загрузка...',
-            successMessage = 'Спасибо! Мы скоро с вами свяжемся';
+            successMessage = 'Спасибо! Мы скоро с вами свяжемся',
+            checkFormMessage = 'Проверьте корректность данных формы';
 
         const forms = getAll('form');
         const statusMessage = document.createElement('div');
+        statusMessage.style.color = 'white';
 
         const clearForm = () => {
             forms.forEach(item => [...item.elements].forEach(item => item.value = ''));
@@ -493,7 +513,16 @@ window.addEventListener("DOMContentLoaded", () => {
             form.addEventListener('submit', event => {
                 event.preventDefault();
                 form.appendChild(statusMessage);
+
+                if (!checkFormElements(form)) {
+                    console.log(checkFormElements(form));
+                    statusMessage.textContent = checkFormMessage;    
+                    setTimeout(() => statusMessage.textContent = '', 2000);
+                    return;
+                }
+
                 statusMessage.textContent = loadMessage;
+                
 
                 const formData = new FormData(form);
                 const body = {};
@@ -507,6 +536,17 @@ window.addEventListener("DOMContentLoaded", () => {
                     .catch(error => {
                         statusMessage.textContent = errorMessage;
                         console.error(error);
+                    })
+                    .finally(() => {
+                        if (event.target.closest('.popup')) {
+                            setTimeout(() => {
+                                const popupClose = get('.popup-close');
+                                statusMessage.textContent = '';
+                                popupClose.click();
+                            }, 2000);
+                        } else {
+                            setTimeout(() => statusMessage.textContent = '', 2000);
+                        }
                     });
             });
         });

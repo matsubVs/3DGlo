@@ -1,12 +1,11 @@
+// eslint-disable-next-line no-unused-vars
 class Validator {
-    constructor({selector, pattern = {}, method}) {
+    constructor({ selector, pattern = {}, method }) {
         this.form = document.querySelector(selector);
         this.pattern = pattern;
         this.method = method;
-        this.elementsForm = [...this.form.elements].filter(item => {
-            return item.tagName.toLowerCase !== 'button' &&
-            item.type !== 'button';
-        });
+        this.elementsForm = [...this.form.elements].filter(item => 
+            item.tagName.toLowerCase !== 'button' && item.type !== 'button');
         this.error = new Set();
     }
 
@@ -15,11 +14,11 @@ class Validator {
         this.setPattern();
         this.elementsForm.forEach(item => item.addEventListener('change', this.checkIt.bind(this)));
         this.form.addEventListener('submit', event => {
-            this.elementsForm.forEach(item => this.checkIt({target: item}));
+            this.elementsForm.forEach(item => this.checkIt({ target: item }));
             if (this.error.size) {
                 event.preventDefault();
             }
-        })
+        });
     }
 
     checkIt(event) {
@@ -98,7 +97,7 @@ class Validator {
                 font-family: sans-serif;
                 color: red;
             }
-        `
+        `;
         document.head.appendChild(style);
     }
 
