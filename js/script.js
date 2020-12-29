@@ -365,7 +365,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const tel = getAll('input[type="tel"]');
         tel.forEach(item => {
             item.addEventListener('input', () => {
-                item.value = item.value.replace(/[^\d+]/, '');
+                item.value = item.value.replace(/[^\d+]/, '').substr(0, 13);
             });
         });
 
