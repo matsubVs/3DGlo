@@ -111,19 +111,15 @@ window.addEventListener("DOMContentLoaded", () => {
         body.addEventListener('click', event => {
             const target = event.target;
             if (target.closest(".menu")) {
-                console.log('here');
                 menuHandler();
             }  else if (menu.matches('.active-menu') && !target.matches('menu') && !target.matches('a') && 
                         !target.matches('li')) {
-                console.log('here1');
                 menuHandler();
             } else if (target === closeBtn) {
-                console.log('here2');
                 menuHandler();
             } else if (target === mainSlideImg) {
                 event.preventDefault();
                 const anchor = get(mainSlideAnchorBtn.getAttribute('href'));
-                console.log('here3');
                 anchor.scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest'
@@ -133,7 +129,6 @@ window.addEventListener("DOMContentLoaded", () => {
                     if (target === item) {
                         menuHandler();
                         event.preventDefault();
-                        console.log('here4');
                         
                         const blockID = item.getAttribute('href');
                         get(blockID).scrollIntoView({
@@ -378,13 +373,13 @@ window.addEventListener("DOMContentLoaded", () => {
         const name = getAll('.form-name');
         name.forEach(item => {
             item.addEventListener('input', () => {
-                item.value = item.value.replace(/[^а-яё ]/, '');
+                item.value = item.value.replace(/[^а-яё ]/i, '');
             });
         });
 
         const message = get('.mess');
         message.addEventListener('input', event => 
-            event.target.value = event.target.value.replace(/[^а-яё ,;:.\d?!+-]/, ''));
+            event.target.value = event.target.value.replace(/[^а-яё ,;:.\d?!+-]/i, ''));
         const inputBlock = get('.calc-block');
 
         inputBlock.addEventListener('click', event => {
