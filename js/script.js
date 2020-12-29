@@ -414,6 +414,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 calcSquare.value = '';
                 calcCount.value = '';
                 calcDay.value = '';
+                totalValue.textContent = 0;
                 return;
             } 
             
