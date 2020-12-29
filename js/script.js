@@ -378,7 +378,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
         const message = get('.mess');
         message.addEventListener('input', event => 
-            event.target.value = event.target.value.replace(/[^а-яё ,;:.\d]/, ''));
+            event.target.value = event.target.value.replace(/[^а-яё ,;:.\d?!+-]/, ''));
         const inputBlock = get('.calc-block');
 
         inputBlock.addEventListener('click', event => {
