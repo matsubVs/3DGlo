@@ -475,12 +475,14 @@ window.addEventListener("DOMContentLoaded", () => {
     //send-ajax-form
     const sendForm = () => {
         const errorMessage = 'Что-то пошло не так',
-            loadMessage = 'Загрузка...',
             successMessage = 'Спасибо! Мы скоро с вами свяжемся',
             checkFormMessage = 'Проверьте корректность данных формы';
 
         const forms = getAll('form');
         const statusMessage = document.createElement('div');
+        const preloader = document.createElement('div');
+        preloader.classList.add('sk-spinner-pulse');
+        preloader.classList.add('d-none');
         statusMessage.style.color = 'white';
 
         const clearForm = () => {
@@ -514,17 +516,17 @@ window.addEventListener("DOMContentLoaded", () => {
         forms.forEach(form => {
             form.addEventListener('submit', event => {
                 event.preventDefault();
+                form.appendChild(preloader);
+                preloader.classList.remove('d-none');
                 form.appendChild(statusMessage);
 
                 if (!checkFormElements(form)) {
                     console.log(checkFormElements(form));
                     statusMessage.textContent = checkFormMessage;    
+                    preloader.classList.add('d-none');
                     setTimeout(() => statusMessage.textContent = '', 2000);
                     return;
                 }
-
-                statusMessage.textContent = loadMessage;
-                
 
                 const formData = new FormData(form);
                 const body = {};
@@ -533,9 +535,11 @@ window.addEventListener("DOMContentLoaded", () => {
                 });
                 postData(body)
                     .then(() => {
+                        preloader.classList.add('d-none');
                         statusMessage.textContent = successMessage;
                     })
                     .catch(error => {
+                        preloader.classList.add('d-none');
                         statusMessage.textContent = errorMessage;
                         console.error(error);
                     })
@@ -547,6 +551,7 @@ window.addEventListener("DOMContentLoaded", () => {
                                 popupClose.click();
                             }, 2000);
                         } else {
+                            preloader.classList.add('d-none');
                             setTimeout(() => statusMessage.textContent = '', 2000);
                         }
                     });
