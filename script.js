@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         data.cars.forEach(item => {
                             if (item.brand === select.value) {
                                 resolve(item);
-                            } else if (item.brand !== select.value) {
+                            } else if (select.value === 'no') {
                                 reject();
                             }
                         });
