@@ -490,28 +490,13 @@ window.addEventListener("DOMContentLoaded", () => {
         };
 
         const postData = body => 
-            new Promise((resolve, reject) => {
-                const request = new XMLHttpRequest();
-                request.addEventListener('readystatechange', () => {
-    
-                    if (request.readyState !== 4) {
-                        return;
-                    }
-                    if (request.status === 200) {
-                        resolve();
-                    } else {
-                        reject(request.status);
-                    }
-    
-                    clearForm();
-                });
-    
-                request.open('POST', './server.php');
-                request.setRequestHeader('Content-Type', 'application/json');
-    
-                request.send(JSON.stringify(body));
+            fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body) 
             });
-            
         
         forms.forEach(form => {
             form.addEventListener('submit', event => {
@@ -521,7 +506,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 form.appendChild(statusMessage);
 
                 if (!checkFormElements(form)) {
-                    console.log(checkFormElements(form));
                     statusMessage.textContent = checkFormMessage;    
                     preloader.classList.add('d-none');
                     setTimeout(() => statusMessage.textContent = '', 2000);
@@ -534,7 +518,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     body[key] = value;
                 });
                 postData(body)
-                    .then(() => {
+                    .then(response => {
+                        if (response.status !== 200) {
+                            throw new Error('error');
+                        }
                         preloader.classList.add('d-none');
                         statusMessage.textContent = successMessage;
                     })
@@ -544,6 +531,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         console.error(error);
                     })
                     .finally(() => {
+                        clearForm();
                         if (event.target.closest('.popup')) {
                             setTimeout(() => {
                                 const popupClose = get('.popup-close');
