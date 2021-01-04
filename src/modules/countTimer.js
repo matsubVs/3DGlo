@@ -45,7 +45,7 @@ const countTimer = deadline => {
         }
     }
 
-    intervalId = setInterval(updateTime, 1000);
+    intervalId = setInterval(updateTime, 100);
 };
 
 export default countTimer;
