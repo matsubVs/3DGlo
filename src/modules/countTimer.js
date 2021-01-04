@@ -44,7 +44,7 @@ const countTimer = deadline => {
             timerSeconds.textContent = "00";
         }
     }
-
+    updateTime();
     intervalId = setInterval(updateTime, 1000);
 };
 
