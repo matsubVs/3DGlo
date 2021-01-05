@@ -6,7 +6,7 @@ const inputValidation = () => {
         });
     });
 
-    const name = document.querySelectorAll('.form-name');
+    const name = document.querySelectorAll('input[name="user_name"]');
     name.forEach(item => {
         item.addEventListener('input', () => {
             item.value = item.value.replace(/[^а-яё ]/i, '');

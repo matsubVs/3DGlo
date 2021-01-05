@@ -4,6 +4,10 @@ const checkFormElements = form => {
             return /[\d+]{7,13}/.test(item.value);
         } else if (item.matches('[type="email"]')) {
             return /([a-z])|.+@.+\..+/i.test(item.value);
+        } else if (item.matches('[name=user_name]')) {
+            return /.{2,}/.test(item.value);
+        } else if (item.matches('[name=user_message]')) {
+            return item.value !== '';
         } else {
             return item;
         }
