@@ -168,8 +168,7 @@
 		<h2>Портфолио</h2>
 		<div class="underline"></div>
 		<ul class="portfolio-content" id="all-progects">
-			<li class="portfolio-item portfolio-item-active"><img src="images/portfilio/portfolio-01.jpg"
-																														alt="portfolio"></li>
+			<li class="portfolio-item portfolio-item-active"><img src="images/portfilio/portfolio-01.jpg" alt="portfolio"></li>
 			<li class="portfolio-item"><img src="images/portfilio/portfolio-04.jpg" alt="portfolio"></li>
 			<li class="portfolio-item"><img src="images/portfilio/portfolio-06.jpg" alt="portfolio"></li>
 			<li class="portfolio-item"><img src="images/portfilio/portfolio-07.jpg" alt="portfolio"></li>
@@ -232,6 +231,8 @@
 				<div class="companies-hor-item"><img src="images/companies/companies-7.png" alt=""></div>
 				<div class="companies-hor-item"><img src="images/companies/companies-8.png" alt=""></div>
 			</div>
+			<!-- <button id="test-left"> < </button>
+			<button id="test-right"> > </button> -->
 		</div>
 	</div>
 </div>
@@ -412,5 +413,29 @@
 </div>
 
 <script src="dist/bundle.js"></script>
+<script src="dist/slider.js"></script>
+<script>
+	const carousel = new SliderCarousel({
+		wrap: '.companies-hor',
+		main: '.companies-wrapper',
+		slidesToShow: 5,
+		infinity: true,
+		responsive: [{
+			breakpoint: 1024,
+			slidesToShow: 3
+		},
+		{
+			breakpoint: 768,
+			slidesToShow: 2,
+		},
+		{
+			breakpoint: 576,
+			slidesToShow: 1
+		}
+	]
+	})
+
+	carousel.init();
+</script>
 </body>
 </html>
